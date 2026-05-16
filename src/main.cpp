@@ -41,10 +41,10 @@
 
 SoftwareSerial midi(MIDI_IN, MIDI_OUT);
 
-uint8_t senseline[8] = {KEY0, KEY1, KEY2, KEY3, KEY4, KEY5, KEY6, KEY7};
+uint8_t senseLine[8] = {KEY0, KEY1, KEY2, KEY3, KEY4, KEY5, KEY6, KEY7};
 int8_t stopShifts[6] = {STOP_OFF, STOP_ON_0, STOP_ON_1, STOP_ON_MIN1, STOP_ON_2, STOP_ON_MIN2};
-uint8_t keystate[KEYCOUNT];
-uint8_t stopstate[STOPCOUNT];
+uint8_t keyState[KEYCOUNT];
+uint8_t stopState[STOPCOUNT];
 int8_t stopShift[STOPCOUNT];
 
 void scanKeyboard ();
@@ -88,20 +88,20 @@ void setupOutputs () {
 }
 
 void scanKeyboard () {
-  for (uint8_t bit_2 = 0; bit_2 < 2; bit_2++ ) {
-    digitalWrite(MUX_OUT_2, bit_2);
-    for (uint8_t bit_1 = 0; bit_1 < 2; bit_1++ ) {
-      digitalWrite(MUX_OUT_1, bit_1);
-      for (uint8_t bit_0 = 0; bit_0 < 2; bit_0++ ) {
-        digitalWrite(MUX_OUT_0, bit_0);
+  for (uint8_t bit2 = 0; bit2 < 2; bit2++ ) {
+    digitalWrite(MUX_OUT_2, bit2);
+    for (uint8_t bit1 = 0; bit1 < 2; bit1++ ) {
+      digitalWrite(MUX_OUT_1, bit1);
+      for (uint8_t bit0 = 0; bit0 < 2; bit0++ ) {
+        digitalWrite(MUX_OUT_0, bit0);
         digitalWrite(MUX_OUT_0E, HIGH);
-        uint8_t base = (bit_2 * 4 + bit_1 * 2 + bit_0) * 8;
+        uint8_t base = (bit2 * 4 + bit1 * 2 + bit0) * 8;
         for (uint8_t line = 0; line < 8; line++) {
           uint8_t keyNum = base + line;
-          uint8_t val = digitalRead(senseline[line]);
-          uint8_t old = keystate[keyNum];
+          uint8_t val = digitalRead(senseLine[line]);
+          uint8_t old = keyState[keyNum];
           if (val ^ old) { // if val is not the same as the old state
-            keystate[keyNum] = val;
+            keyState[keyNum] = val;
             sendMidi(KEY_CHANNEL, keyNum, val);
           }
         }
@@ -115,10 +115,10 @@ void scanStops () {
   // for now no MUX, just 
   digitalWrite(MUX_OUT_1E, HIGH);
   for (uint8_t line = 0; line < 8; line++) {
-    uint8_t val = digitalRead(senseline[line]);  
-    uint8_t old = stopstate[line];
+    uint8_t val = digitalRead(senseLine[line]);  
+    uint8_t old = stopState[line];
     if (val ^ old && val) { // if val is not the same as the old state and it's now on
-      stopstate[line] = val;
+      stopState[line] = val;
       if (stopShift[line] == 5) { // if the stop is at max shift, the stof goes off
         stopShift[line] = 0;
         sendMidi(STOP_CHANNEL, calcStop(line, 5), KEY_OFF);
