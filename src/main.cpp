@@ -61,6 +61,8 @@ void setup() {
   setupInputs();
   setupOutputs();
   midi.begin(MIDI_BAUDRATE);
+  Serial.begin(9600);
+  Serial.println("Keyboard initialized");
 }
 
 void loop() {
@@ -141,6 +143,7 @@ void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t val) {
   midi.write(command);
   midi.write(velocity);
   midi.write(key);
+  Serial.println("Sent MIDI message on channel " + String(channel) + " with command " + String(command) + " and key " + String(key));
 }
 
 uint8_t calcStop (uint8_t stop, int8_t shift) {
