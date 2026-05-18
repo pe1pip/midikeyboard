@@ -14,21 +14,21 @@
 #define KEY_OFF 0x80
 #define KEY_ON 0x90
 
-#define MUX_OUT_0 PD4
-#define MUX_OUT_1 PD5
-#define MUX_OUT_2 PD6
-#define MUX_OUT_0E PD7
-#define MUX_OUT_1E PC3
+#define MUX_OUT_0 4
+#define MUX_OUT_1 5
+#define MUX_OUT_2 6
+#define MUX_OUT_0E 7
+#define MUX_OUT_1E 17
 
 #define KEY_PINMODE INPUT
-#define KEY0 PB0
-#define KEY1 PB1
-#define KEY2 PB2
-#define KEY3 PB3
-#define KEY4 PB4
-#define KEY5 PC0
-#define KEY6 PC1
-#define KEY7 PC2
+#define KEY0 8
+#define KEY1 9
+#define KEY2 10
+#define KEY3 11
+#define KEY4 12
+#define KEY5 14
+#define KEY6 15
+#define KEY7 16
 
 #define STOP_OFF 0
 #define STOP_ON_0 1
