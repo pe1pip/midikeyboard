@@ -1,5 +1,13 @@
 # Midi Keyboard
 
+[[_TOC_]]
+
+## Introduction
+
+Copyright 2026 Remco Post
+
+[License AGPL](./LICENSE.md)
+
 ## de-mux
 
 The software is designed to use a one-of-eight demux like the 74hc238 to scan a keyboard. With 8 lines this could be up to 5 octave (and a bit).

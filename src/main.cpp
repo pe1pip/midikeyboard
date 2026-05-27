@@ -1,12 +1,27 @@
+/*
+
+Copyright (c) 2026 Remco Post
+
+This program is free software: you can redistribute it and/or modify it under the terms of the
+GNU Affero General Public License as published by the Free Software Foundation, either version
+3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program.
+If not, see <https://www.gnu.org/licenses/>
+*/
 #include <Arduino.h>
 
 #define KEYCOUNT 64
-#define STOPCOUNT 8
+#define STOPCOUNT 3
 
 #define MIDI_IN 8
 #define MIDI_OUT 9
 #define MIDI_BAUDRATE 31250
-#define midi Serial3
+#define midi Serial4 // RX3/TX3
 
 #define KEY_CHANNEL 1
 #define STOP_CHANNEL 0
@@ -25,7 +40,7 @@
 #define GROUPLINE1 52
 #define GROUPLINE2 51
 #define GROUPLINE3 50
-#define GROUPLINE4 49
+#define GROUPLINE4 49 
 #define GROUPLINE5 48
 #define GROUPLINE6 47
 #define GROUPLINE7 46
@@ -38,11 +53,18 @@
 #define KEY6 38
 #define KEY7 40
 
-#define STOPLINE 13
+#define STOP0 2
+#define STOP1 4
+#define STOP2 6
+
+#define STOP0LED 3
+#define STOP1LED 5
+#define STOP2LED 7
 
 uint8_t keyLines[8] = {KEY0, KEY1, KEY2, KEY3, KEY4, KEY5, KEY6, KEY7};
 uint8_t groupLines[8] = {GROUPLINE0, GROUPLINE1, GROUPLINE2, GROUPLINE3, GROUPLINE4, GROUPLINE5, GROUPLINE6, GROUPLINE7};
-uint8_t stopLines[1] = {STOPLINE};
+uint8_t stopLines[3] = {STOP0, STOP1, STOP2};
+uint8_t stopLeds[3] = {STOP0LED, STOP1LED, STOP2LED};
 
 uint8_t led = 1;
 
@@ -60,6 +82,7 @@ int8_t stopShifts[6] = {STOP_OFF, STOP_ON_0, STOP_ON_1, STOP_ON_MIN1, STOP_ON_2,
 int8_t keyState[KEYCOUNT];
 int8_t stopState[STOPCOUNT];
 int8_t stopShift[STOPCOUNT];
+boolean stopChanged[STOPCOUNT];
 
 void scanKeyboard();
 void scanStops();
@@ -67,8 +90,22 @@ void scanStops();
 void setupKeylines();
 void setupGroupLines();
 void setupStopLines();
-void setupStops(); 
+void setupStops();
 
+// function declarations for the ISRs for the stop lines
+void stop0ISR();
+void stop1ISR();
+void stop2ISR();
+void stop3ISR();
+void stop4ISR();
+void stop5ISR();
+void stop6ISR();
+void stop7ISR();
+void stop8ISR();
+void stopISR (int stopNum, int stopShift);
+
+// a list of Interrupt Service Routines for easy setup of the stop line interrupts
+void (*isrFunctions[STOPCOUNT * 3])() = {stop0ISR, stop1ISR, stop2ISR, stop3ISR, stop4ISR, stop5ISR, stop6ISR, stop7ISR, stop8ISR};
 uint8_t calcStop (uint8_t stop, int8_t shift);
 
 void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t val);
@@ -102,6 +139,7 @@ void setupKeylines () {
   for (uint8_t i=0; i<STOPCOUNT; i++) {
     stopState[i] = 0;
     stopShift[i] = 0;
+    stopChanged[i] = false;
   }
 }
 
@@ -117,6 +155,8 @@ void setupGroupLines () {
 void setupStopLines () {
   for (uint8_t i=0; i<sizeof(stopLines); i++) {
     pinMode(stopLines[i], INPUT_PULLUP);
+    pinMode(stopLeds[i], OUTPUT);
+    attachInterrupt(digitalPinToInterrupt(stopLines[i]), isrFunctions[1 + (i * 3)], CHANGE);
   }
 }
 
@@ -153,29 +193,16 @@ void scanKeyboard () {
 }
 
 void scanStops () {
-#ifdef DEBUG
-  for (uint8_t line = 0; line < sizeof(keyLines); line++) {
-    digitalWrite(keyLines[line], LOW);
-    for (uint8_t i=0; i<sizeof(stopLines); i++) {
-      uint8_t val = digitalRead(stopLines[i]);
-      uint8_t old = stopState[i];
-      if (val ^ old && val) { // if val is not the same as the old state and it's now on
-        stopState[i] = val;
-        if (stopShift[i] == 5) { // if the stop is at max shift, the stof goes off
-          stopShift[i] = 0;
-          sendMidi(STOP_CHANNEL, calcStop(i, 5), KEY_OFF);
-        } else { // STOP moves to next shift, from OFF to ON_0, to ON_1, etc
-          if (stopShift[i] != 0) {
-            sendMidi(STOP_CHANNEL, calcStop(i, stopShift[i]), KEY_OFF);
-          }
-          stopShift[i]++;
-          sendMidi(STOP_CHANNEL, calcStop(i, stopShift[i]), KEY_ON);
-        }
+  for (uint8_t i=0; i<STOPCOUNT; i++) {
+    if (stopChanged[i]) {
+      stopChanged[i] = false;
+      if (stopState[i]) { // if the stop is on
+        sendMidi(STOP_CHANNEL, calcStop(i, stopShift[i]), KEY_ON);
+      } else { // if the stop is off
+        sendMidi(STOP_CHANNEL, calcStop(i, stopShift[i]), KEY_OFF);
       }
     }
-    digitalWrite(keyLines[line], HIGH);
   }
-#endif
 }
 
 void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t val) {
@@ -190,4 +217,45 @@ void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t val) {
 
 uint8_t calcStop (uint8_t stop, int8_t shift) {
   return stop + 4 + stopShifts[shift];
+}
+
+// 
+void stop0ISR () {
+  stopISR(0, -1);
+}
+void stop1ISR () {
+  stopISR(0, 0);
+}
+void stop2ISR () {
+  stopISR(0, 1);
+}
+void stop3ISR () {
+  stopISR(1, -1);
+}
+void stop4ISR () {
+  stopISR(1, 0);
+}
+void stop5ISR () {
+  stopISR(1, 1);
+}
+void stop6ISR () {
+  stopISR(2, -1);
+}
+void stop7ISR () {
+  stopISR(2, 0);
+}
+void stop8ISR () {
+  stopISR(2, 1);
+}
+
+void stopISR (int stopNum, int stopShift) {
+  stopState[stopNum] = !stopState[stopNum];
+  stopChanged[stopNum] = true;
+  if (stopState[stopNum]) { // if the stop is now on
+    stopShifts[stopNum] = stopShift;
+    digitalWrite(stopLeds[stopNum], HIGH);
+  } else { // if the stop is now off
+    stopShifts[stopNum] = 0;
+    digitalWrite(stopLeds[stopNum], LOW);
+  }
 }
