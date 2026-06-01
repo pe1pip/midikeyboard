@@ -10,11 +10,13 @@ Copyright 2026 Remco Post
 
 ## de-mux
 
-The software is designed to use a one-of-eight demux like the 74hc238 to scan a keyboard. With 8 lines this could be up to 5 octave (and a bit).
+The software is designed to use a one-of-eight demux like the 74hc238 to scan a keyboard. With 8 lines this could
+be up to 5 octave (and a bit).
 
 ## Stops
 
-The stops are not multiplexed. The software supports 8 stops. The trick is that each of the stops cycles through 6 options:
+The stops are not multiplexed. The software supports 8 stops. The trick is that each of the stops cycles through
+6 options:
 
 - off
 - on (no shift)
@@ -23,12 +25,14 @@ The stops are not multiplexed. The software supports 8 stops. The trick is that 
 - on (2 up)
 - on (2 down)
 
-On a stop change the software first sends 'key off', unless the stop is currently off, followed by the key on that corresponds with the stop and shift.
-To facilitate that, each stop actually uses 5 values: 2, 3, 4, 5 and 6 with an offset in mutiples of 8 for each stop.
+On a stop change the software first sends 'key off', unless the stop is currently off, followed by the key on that
+corresponds with the stop and shift. To facilitate that, each stop actually uses 5 values: 2, 3, 4, 5 and 6 with
+an offset in mutiples of 8 for each stop.
 
 ### Stop state
 
-The stop state is stored in an array with a value that corresponds to one of the 6 possible options. The state of the stop buttons is also stored. On a LOW to HIGH transition the stop state is updated and the new value is transmitted.
+The stop state is stored in an array with a value that corresponds to one of the 6 possible options. The state of the
+stop buttons is also stored. On a LOW to HIGH transition the stop state is updated and the new value is transmitted.
 
 ## MIDI channels
 
@@ -39,11 +43,13 @@ Configurable in code, but defined as:
 
 ## Key state
 
-The (previous) key state is stored in an array. If the value has changed the new value is send over the serial line immediately.
+The (previous) key state is stored in an array. If the value has changed the new value is send over the serial line
+immediately.
 
 ## Keyborad
 
-The keyboard is a simple matrix, 8 input lines, diodes to each key contact and then 8 lines. The current flows from 'Keys in group' to 'Group'.
+The keyboard is a simple matrix, 8 input lines, diodes to each key contact and then 8 lines. The current flows from
+'Keys in group' to 'Group'.
 
 ### Groups
 
@@ -73,4 +79,12 @@ The keyboard is a simple matrix, 8 input lines, diodes to each key contact and t
 
 ### Scanning the keyboard
 
-The 'group' lines are pulled up via the internal pullup resister. If a key is depressed and the 'Keys in group' line is 'LOW', then the 'group' line goes 'LOW'. So, normally all 'Key in group' lines are high. Then one by one each is set to 'LOW', and all 'Group' lines are read to see which of the keys are depressed; those will read 'LOW'.
+The 'group' lines are pulled up via the internal pullup resister. If a key is depressed and the 'Keys in group'
+line is `LOW`, then the 'group' line goes `LOW`. So, normally all 'Key in group' lines are high. Then one by one
+each is set to `LOW`, and all 'Group' lines are read to see which of the keys are depressed; those will read `LOW`.
+After a key has changed, we don't read the new state for some time `DEBOUNCE` to debounce the keypresses and releases.
+
+## Calcant
+
+Calcant is a special switch, it basically turns off the blower. To draw attention to the blower being off,
+the LED will blink. This switch is debounced in the same manner as as the keyboard.

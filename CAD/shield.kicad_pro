@@ -469,7 +469,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
@@ -662,7 +662,7 @@
         "uuid": "329dfe94-e59b-4341-af46-1d7576444f0e"
       }
     ],
-    "used_designators": "J14-21,#PWR9-13",
+    "used_designators": "",
     "variants": []
   },
   "sheets": [
