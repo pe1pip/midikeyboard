@@ -23,16 +23,16 @@ void setupMidi () {
  * Sends a MIDI message on the specified channel with the given key number and value.
  * @param channel The MIDI channel to send the message on (0-15).
  * @param keyNum The MIDI key number to send (0-127).
- * @param val The MIDI command to send (e.g. KEY_ON or KEY_OFF).
+ * @param midiCommand The MIDI command to send (e.g. KEY_ON or KEY_OFF).
  */
-void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t val) {
-  uint8_t command = val + channel;
+void sendMidi (uint8_t channel, uint8_t keyNum, uint8_t midiCommand) {
+  uint8_t command = midiCommand + channel;
   uint8_t velocity = 0x7F;
   uint8_t key = keyNum + KEY_BASE;
   midi.write(command);
   midi.write(velocity);
   midi .write(key);
   #ifdef DEBUG
-  Serial.println("Sent MIDI message on channel " + String(channel) + " with command " + String(val, HEX) + " and key " + String(key, HEX));
+  Serial.println("Sent MIDI message on channel " + String(channel) + " with command " + String(midiCommand, HEX) + " and key " + String(key, HEX));
   #endif
 }
