@@ -4,7 +4,7 @@
 #define MIDI_IN 8
 #define MIDI_OUT 9
 #define MIDI_BAUDRATE 31250
-#define midi Serial4 // RX3/TX3
+#define midi Serial3
 
 #define KEY_CHANNEL 1
 #define STOP_CHANNEL 0
