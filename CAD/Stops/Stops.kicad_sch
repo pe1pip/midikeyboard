@@ -1496,7 +1496,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "10258475-e8aa-4f55-bf12-76e0b5dd555e")
-		(property "Reference" "SW1"
+		(property "Reference" "SW2"
 			(at 80.01 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1564,7 +1564,7 @@
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "SW1")
+					(reference "SW2")
 					(unit 1)
 				)
 			)
@@ -1637,6 +1637,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "connector/pin_header_socket"
+			(at 113.03 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "6"
 			(uuid "1204e93e-4c78-483d-ac1d-6e2578f27e05")
 		)
@@ -1681,7 +1692,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "4599eaa1-e9e4-4109-bf5d-6c9933c42ff6")
-		(property "Reference" "R2"
+		(property "Reference" "R1"
 			(at 66.548 48.006 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1734,6 +1745,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "resistor/THT"
+			(at 68.58 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "3014cf99-78c9-455b-9cdc-47a0f1f9342a")
 		)
@@ -1743,7 +1765,7 @@
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "R2")
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -1761,7 +1783,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "4d5053c6-8aa0-4fbb-81c2-cc7fbd6ae6cf")
-		(property "Reference" "H1"
+		(property "Reference" "H2"
 			(at 102.87 30.4799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1816,10 +1838,21 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "mounting_hardware/mounting_hole"
+			(at 100.33 31.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "H1")
+					(reference "H2")
 					(unit 1)
 				)
 			)
@@ -1837,7 +1870,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5d1e547b-6a5e-4f33-9f3d-d8d4155cf48d")
-		(property "Reference" "H2"
+		(property "Reference" "H4"
 			(at 120.65 30.4799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1892,10 +1925,21 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "mounting_hardware/mounting_hole"
+			(at 118.11 31.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "H2")
+					(reference "H4")
 					(unit 1)
 				)
 			)
@@ -2069,7 +2113,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "92d5d50b-007e-464e-ab3a-8bb165f489da")
-		(property "Reference" "H4"
+		(property "Reference" "H3"
 			(at 157.48 30.4799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2124,10 +2168,21 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "mounting_hardware/mounting_hole"
+			(at 154.94 31.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "H4")
+					(reference "H3")
 					(unit 1)
 				)
 			)
@@ -2197,6 +2252,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "resistor/THT"
+			(at 68.58 77.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "b9c600ae-6260-4032-9005-88ceb19d6314")
 		)
@@ -2224,7 +2290,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "99f5c28c-1f2e-4a9d-85b7-aa02cf79d2c7")
-		(property "Reference" "SW2"
+		(property "Reference" "SW1"
 			(at 80.01 35.56 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2292,7 +2358,7 @@
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "SW2")
+					(reference "SW1")
 					(unit 1)
 				)
 			)
@@ -2309,7 +2375,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "c0dbc79d-2b7d-4708-9cc1-65f49e02f698")
-		(property "Reference" "R1"
+		(property "Reference" "R2"
 			(at 66.548 63.246 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2362,6 +2428,17 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "resistor/THT"
+			(at 68.58 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "95172ac8-6087-4f88-b5a7-0a8258a44a80")
 		)
@@ -2371,7 +2448,7 @@
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "R1")
+					(reference "R2")
 					(unit 1)
 				)
 			)
@@ -2467,7 +2544,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "fc119dd2-f4b0-4cd0-9606-4adffc3aee7d")
-		(property "Reference" "H3"
+		(property "Reference" "H1"
 			(at 139.7 30.4799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2522,10 +2599,21 @@
 				)
 			)
 		)
+		(property "KiLib_Generator" "mounting_hardware/mounting_hole"
+			(at 137.16 31.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Stops"
 				(path "/8700c023-aa1e-4c84-a44d-574e616a3737"
-					(reference "H3")
+					(reference "H1")
 					(unit 1)
 				)
 			)
