@@ -20,23 +20,22 @@ If not, see <https://www.gnu.org/licenses/>
 #include <calcant.h> 
 
 void setup() {
-  setupKeylines();
-  setupGroupLines();
-  setupStopLines();
-  setupCalcant();
+  keyboard::init();
+  stops::init();
+  calcant::init();
+#ifdef DEBUG
   Serial.begin(115200);
   while(!Serial); // wait for serial to be ready
   delay(250); // wait for the serial monitor to open
   Serial.println("Keyboard initialized");
-#ifdef DEBUG
   Serial.println("Debug mode enabled");
-  setupStops();
+  stops::initDemo();
 #endif
 }
 
 void loop() {
-  // scanKeyboard();
-  scanStops();
-  scanCalcant();
-  blinkCalcant();
+  // keyboard::scan();
+  stops::scan();
+  calcant::scan();
+  calcant::blinkCalcant();
 }
