@@ -1,6 +1,6 @@
 // calcant related constants and variables
-#define CALCANT 15
-#define CALCANT_LED 17
+#define CALCANT 35
+#define CALCANT_LED 37
 
 void setupCalcant();
 void blinkCalcant();
