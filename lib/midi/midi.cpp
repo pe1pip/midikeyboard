@@ -21,7 +21,7 @@ If not, see <https://www.gnu.org/licenses/>
 #define MIDI_IN 8
 #define MIDI_OUT 9
 #define MIDI_BAUDRATE 31250
-#define midiUART Serial4 // RX3/TX3
+#define midiUART Serial3 // RX3/TX3
 
 namespace midi {
   void init () {
