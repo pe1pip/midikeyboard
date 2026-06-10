@@ -21,7 +21,14 @@ If not, see <https://www.gnu.org/licenses/>
 #define MIDI_IN 8
 #define MIDI_OUT 9
 #define MIDI_BAUDRATE 31250
+
+#ifdef ARDUINO_GIGA_M7
 #define midiUART Serial4 // RX3/TX3
+#endif
+
+#ifdef ARDUINO_AVR_MEGA2560
+#define midiUART Serial3 // RX3/TX3
+#endif
 
 namespace midi {
   void init () {
