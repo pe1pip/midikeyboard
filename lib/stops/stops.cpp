@@ -82,7 +82,6 @@ namespace stops {
       uint8_t current = digitalRead(stopLines[i]);
 
       if (current == 0 && debounce == 0) {
-        Serial.println("Ja");
         stopDebounce[i] = DEBOUNCE;
         if (old == 0) {
           stopState[i] = 1;
