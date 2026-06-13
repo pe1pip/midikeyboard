@@ -26,6 +26,9 @@ If not, see <https://www.gnu.org/licenses/>
 #include <WiFi.h>
 #include <midi.h>
 
+#define WIFI_KEY 11
+#define WIFI_LED 10
+
 #define MIDI_UDP_PORT 21928
 
 #define SSID "PipeOrgan"
@@ -44,10 +47,26 @@ namespace wifiMidi {
   int status = WL_IDLE_STATUS;
 
   IPAddress remoteIp;
+
+  int8_t wifi_on;
+  int8_t debounce;
+
+  void enable();
+  void disable();
+
+  /**
+   * Sets up the calcant switch and its associated LED.
+   */
+  void init () {
+    pinMode(WIFI_KEY, INPUT_PULLUP);
+    pinMode(WIFI_LED, OUTPUT);
+    digitalWrite(WIFI_LED, LOW);
+  }
+
   /**
    * Setup the WiFi MIDI connection. This will block until a connection is established.
    */
-  void init () {
+  void enable () {
     #ifndef ARDUINO_GIGA_M7
     return
     #else
@@ -82,6 +101,11 @@ namespace wifiMidi {
     #endif
   }
 
+  void disable () {
+    status = WL_IDLE_STATUS;
+    WiFi.end();
+  }
+
   /**
    * Send a MIDI message over UDP to the remote IP address.
    * @param channel The MIDI channel (0-15)
@@ -112,5 +136,53 @@ namespace wifiMidi {
       }
       return MIDI_OK;
     #endif
+  }
+
+  /**
+   * If the blower is off we blink the led to indicate that the organ is not making sound,
+   * otherwise we keep it on to indicate that the organ is making sound.
+   */
+  void blinkLed () {
+    if (wifi_on < 1) {
+      if (millis() % 1000 < 500) {
+        digitalWrite(WIFI_LED, HIGH);
+      } else {
+        digitalWrite(WIFI_LED, LOW);
+      }
+    } else {
+      digitalWrite(WIFI_LED, HIGH);
+    }
+  }
+
+  /**
+   * Scans the calcant switch and updates its state.
+   */
+  void scan () {
+    // debounce timers
+    if (debounce > 1) {
+      debounce--;
+      return;
+    }
+    if (debounce < 0) {
+      debounce++;
+      return;
+    }
+    // on key-down (after debounce) toggle the state
+    uint8_t current = digitalRead(WIFI_KEY);
+    if (current == 0 && debounce == 0) {
+      if (wifi_on == 0) {
+        debounce = DEBOUNCE;
+        wifi_on = 1;
+        enable();
+      } else {
+        debounce = -DEBOUNCE;
+        wifi_on = 0;
+        disable();
+      }
+    }
+    // key-up is just debounced, no action
+    if (current = 1 && debounce == 1) {
+      debounce = -DEBOUNCE;
+    }
   }
 }

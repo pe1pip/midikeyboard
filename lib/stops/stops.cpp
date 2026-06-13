@@ -21,13 +21,29 @@ If not, see <https://www.gnu.org/licenses/>
 // stop related constants and variables
 #define STOPCOUNT 3
 
-#define STOP0 2
-#define STOP1 4
-#define STOP2 6
+#define STOP0 2 // SW1
+#define STOP1 4 // SW2
+#define STOP2 6 // SW3
+
+#define STOP3 23
+#define STOP4 27
+#define STOP5 31
+
+#define STOP6 22
+#define STOP7 26
+#define STOP8 30
 
 #define STOP0LED 3
 #define STOP1LED 5
 #define STOP2LED 7
+
+#define STOP3LED 25
+#define STOP4LED 29
+#define STOP5LED 33
+
+#define STOP6LED 24
+#define STOP7LED 28
+#define STOP8LED 32
 
 #define STOP_OFF 0
 #define STOP_ON_0 1
@@ -42,7 +58,7 @@ namespace stops {
   int8_t stopShifts[6] = {STOP_OFF, STOP_ON_0, STOP_ON_1, STOP_ON_MIN1, STOP_ON_2, STOP_ON_MIN2};
   int8_t stopState[STOPCOUNT] = { 1, 1, 1 }; // we start with all stops on, so the organ makes sound when powered on
   int8_t stopDebounce[STOPCOUNT] = { 0 };
-  int8_t stopShift[STOPCOUNT] = { 0 }; // we start with all stops in the normal position, so shift 0
+  int8_t stopShift[STOPCOUNT] = { 0 };
 
   void initDemo () {
     for (uint8_t i=0; i<STOPCOUNT; i++) {
@@ -98,6 +114,18 @@ namespace stops {
       }
       if (current == 1 && debounce == 1) {
         stopDebounce[i] = -DEBOUNCE;
+      }
+    }
+  }
+
+  void doLeds (uint8_t stop) {
+    uint8_t stopGroup[3][3] = {{STOP0, STOP3, STOP6}, {STOP1, STOP4, STOP7}, {STOP2, STOP5, STOP8}};
+    uint8_t ledGroup[3][3] = {{STOP0LED, STOP3LED, STOP6LED}, {STOP1LED, STOP4LED, STOP7LED}, {STOP2LED, STOP5LED, STOP8LED}};
+    for (uint8_t i = 0; i < 3; i++) {
+      for (uint8_t j = 0; j < 3; j++) {
+        if (stopGroup[i][j] == stop) {
+
+        }
       }
     }
   }
