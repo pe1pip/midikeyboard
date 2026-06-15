@@ -22,22 +22,22 @@ If not, see <https://www.gnu.org/licenses/>
 #define GROUPLINE_PINMODE INPUT_PULLUP
 
 #define KEYCOUNT 64
-#define GROUPLINE0 53
-#define GROUPLINE1 52
-#define GROUPLINE2 51
-#define GROUPLINE3 50
-#define GROUPLINE4 49 
-#define GROUPLINE5 48
-#define GROUPLINE6 47
-#define GROUPLINE7 46
-#define KEY0 41
-#define KEY1 44
-#define KEY2 42
-#define KEY3 45
-#define KEY4 43
-#define KEY5 39
-#define KEY6 38
-#define KEY7 40
+#define GROUPLINE0 52 // 1
+#define GROUPLINE1 53 // 16
+#define GROUPLINE2 50 // 2
+#define GROUPLINE3 51 // 15
+#define GROUPLINE4 48 // 3
+#define GROUPLINE5 49 // 14
+#define GROUPLINE6 46 // 4
+#define GROUPLINE7 47 // 13
+#define KEY0 40 // 7
+#define KEY1 45 // 12
+#define KEY2 43 // 11
+#define KEY3 44 // 5
+#define KEY4 42 // 6
+#define KEY5 38 // 8
+#define KEY6 39 // 9
+#define KEY7 41 // 10
 
 namespace keyboard {
   uint8_t keyLines[8] = {KEY0, KEY1, KEY2, KEY3, KEY4, KEY5, KEY6, KEY7};
@@ -50,6 +50,7 @@ namespace keyboard {
   void init () {
     for (uint8_t i=0; i<sizeof(keyLines); i++) {
       pinMode(keyLines[i], KEY_PINMODE);
+      digitalWrite(keyLines[i], HIGH);
     }
     for (uint8_t i=0; i<sizeof(groupLines); i++) {
       pinMode(groupLines[i], GROUPLINE_PINMODE);
@@ -67,23 +68,23 @@ namespace keyboard {
         int8_t old = keyState[keyNum];
         if (old < 0) { // if the key was just released, count up to 0
           keyState[keyNum]++;
-          return;
+          break;
         }
         if (old > 1) { // if the key was just pressed, count down to 1
           keyState[keyNum]--;
-          return;
+          break;
         }
         uint8_t val = digitalRead(groupLines[i]); // 0 if the key is pressed, 1 if it's not
 
         if (old == 0 && val == 0) { // if the key was not pressed and now is
           keyState[keyNum] = DEBOUNCE;
           midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_ON);
-          return;
+          break;
         }
         if (old == 1 && val == 1) { // if the key was pressed and now is not
           keyState[keyNum] = -DEBOUNCE;
           midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_OFF);
-          return;
+          break;
         }
       }
       digitalWrite(keyLines[line], HIGH);
