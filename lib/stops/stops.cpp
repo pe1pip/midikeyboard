@@ -65,7 +65,7 @@ namespace stops {
   void initDemo () {
     init();
     for (uint8_t i=0; i<STOPCOUNT; i++) {
-      doStopOn(stopGroup[i][0], 1);
+      doStopOn(i, 1);
     }
   }
 

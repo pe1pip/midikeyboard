@@ -42,7 +42,7 @@ If not, see <https://www.gnu.org/licenses/>
 namespace keyboard {
   uint8_t keyLines[8] = {KEY0, KEY1, KEY2, KEY3, KEY4, KEY5, KEY6, KEY7};
   uint8_t groupLines[8] = {GROUPLINE0, GROUPLINE1, GROUPLINE2, GROUPLINE3, GROUPLINE4, GROUPLINE5, GROUPLINE6, GROUPLINE7};
-  int8_t keyState[KEYCOUNT];
+  int8_t keyState[KEYCOUNT] = { 0 };
 
   /**
    * Sets up the key lines.
@@ -75,14 +75,14 @@ namespace keyboard {
         }
         uint8_t val = digitalRead(groupLines[i]); // 0 if the key is pressed, 1 if it's not
 
-        if (old == 0 && val == 1) { // if the key was not pressed and now is
+        if (old == 0 && val == 0) { // if the key was not pressed and now is
           keyState[keyNum] = DEBOUNCE;
-          midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_OFF);
+          midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_ON);
           return;
         }
-        if (old == 1 && val == 0) { // if the key was pressed and now is not
+        if (old == 1 && val == 1) { // if the key was pressed and now is not
           keyState[keyNum] = -DEBOUNCE;
-          midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_ON);
+          midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_OFF);
           return;
         }
       }
