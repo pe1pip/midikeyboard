@@ -15,6 +15,7 @@ If not, see <https://www.gnu.org/licenses/>
 #include <Arduino.h>
 #include <generic.h>
 #include <midi.h>
+#include <wifiMidi.h>
 #include <keyboard.h>
 #include <stops.h>
 #include <calcant.h> 
@@ -34,8 +35,10 @@ void setup() {
 }
 
 void loop() {
-  // keyboard::scan();
+  keyboard::scan();
   stops::scan();
   calcant::scan();
-  calcant::blinkCalcant();
+  wifiMidi::scan();
+  calcant::blinkLed();
+  wifiMidi::blinkLed();
 }

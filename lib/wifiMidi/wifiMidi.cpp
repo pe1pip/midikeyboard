@@ -23,8 +23,11 @@ If not, see <https://www.gnu.org/licenses/>
 #include <Arduino.h>
 #include <generic.h>
 #include <wifiMidi.h>
-#include <WiFi.h>
 #include <midi.h>
+
+#ifdef ARDUINO_GIGA_M7
+#include <WiFi.h>
+#endif
 
 #define WIFI_KEY 11
 #define WIFI_LED 10
@@ -42,19 +45,19 @@ namespace wifiMidi {
     uint8_t val;
   } MidiMessage;
 
-  char ssid[] = SSID;  // your network SSID (name)
-  char pass[] = PASSWORD; // your network password
-  int status = WL_IDLE_STATUS;
-
-  IPAddress remoteIp;
-
   int8_t wifi_on;
   int8_t debounce;
 
   void enable();
   void disable();
 
-  /**
+#ifdef ARDUINO_GIGA_M7
+  char ssid[] = SSID;  // your network SSID (name)
+  char pass[] = PASSWORD; // your network password
+  int status = WL_IDLE_STATUS;
+
+
+/**
    * Sets up the calcant switch and its associated LED.
    */
   void init () {
@@ -63,13 +66,12 @@ namespace wifiMidi {
     digitalWrite(WIFI_LED, LOW);
   }
 
+  IPAddress remoteIp;
+
   /**
    * Setup the WiFi MIDI connection. This will block until a connection is established.
    */
   void enable () {
-    #ifndef ARDUINO_GIGA_M7
-    return
-    #else
     static const char ssid[] = SSID;  // your network SSID (name)
     static const char pass[] = PASSWORD; // your network password
     if (WiFi.status() == WL_NO_SHIELD) {
@@ -98,7 +100,6 @@ namespace wifiMidi {
         Serial.print("Remote IP address: ");
         Serial.println(remoteIp);
       #endif
-    #endif
   }
 
   void disable () {
@@ -114,28 +115,24 @@ namespace wifiMidi {
    * @return MIDI_OK if the message was sent successfully, MIDI_NOTCONN if not connected, or MIDI_ERROR if there was an error sending the message
    */
   int send (uint8_t channel, uint8_t command, uint8_t keyNum) {
-    #ifndef ARDUINO_GIGA_M7
-      return MIDI_UNAVAIL
-    #else
-      if (status != WL_CONNECTED) {
-        return MIDI_NOTCONN;
-      }
-      MidiMessage message;
-      message.channel = channel;
-      message.command = command;
-      message.keyNum = keyNum;
-      message.val = 0x7F;
+    if (status != WL_CONNECTED) {
+      return MIDI_NOTCONN;
+    }
+    MidiMessage message;
+    message.channel = channel;
+    message.command = command;
+    message.keyNum = keyNum;
+    message.val = 0x7F;
 
-      WiFiUDP udp;
-      if (!udp.beginPacket(remoteIp, MIDI_UDP_PORT)) {
-        return MIDI_NOTCONN;
-      }
-      udp.write((uint8_t*)&message, sizeof(MidiMessage));
-      if (!udp.endPacket()) {
-        return MIDI_ERROR;
-      }
-      return MIDI_OK;
-    #endif
+    WiFiUDP udp;
+    if (!udp.beginPacket(remoteIp, MIDI_UDP_PORT)) {
+      return MIDI_NOTCONN;
+    }
+    udp.write((uint8_t*)&message, sizeof(MidiMessage));
+    if (!udp.endPacket()) {
+      return MIDI_ERROR;
+    }
+    return MIDI_OK;
   }
 
   /**
@@ -181,8 +178,17 @@ namespace wifiMidi {
       }
     }
     // key-up is just debounced, no action
-    if (current = 1 && debounce == 1) {
+    if (current == 1 && debounce == 1) {
       debounce = -DEBOUNCE;
     }
   }
+
+#else
+  void enable () { /* noOp */ };
+  void disable () { /* noOp */ };
+  int send(uint8_t channel, uint8_t command, uint8_t keyNum) { return MIDI_UNAVAIL; };
+  void scan () { /* noOp */ };
+  void blinkLed () { /* noOp */ };
+#endif
+
 }

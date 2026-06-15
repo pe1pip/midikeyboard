@@ -77,7 +77,7 @@ namespace calcant {
       }
     }
     // key-up is just debounced, no action
-    if (current = 1 && calcant_debounce == 1) {
+    if (current == 1 && calcant_debounce == 1) {
       calcant_debounce = -DEBOUNCE;
     }
   }
