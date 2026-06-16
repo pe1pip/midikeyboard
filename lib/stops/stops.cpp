@@ -91,11 +91,11 @@ namespace stops {
         int8_t old = stopState[stop][shift];
         if (debounce > 1) {
           stopDebounce[stop][shift]--;
-          return;
+          continue;
         }
         if (debounce < 0) {
           stopDebounce[stop][shift]++;
-          return;
+          continue;
         }
         uint8_t current = digitalRead(stopGroup[stop][shift]);
 

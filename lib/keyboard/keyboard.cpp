@@ -68,23 +68,23 @@ namespace keyboard {
         int8_t old = keyState[keyNum];
         if (old < 0) { // if the key was just released, count up to 0
           keyState[keyNum]++;
-          break;
+          continue;
         }
         if (old > 1) { // if the key was just pressed, count down to 1
           keyState[keyNum]--;
-          break;
+          continue;
         }
         uint8_t val = digitalRead(groupLines[i]); // 0 if the key is pressed, 1 if it's not
 
         if (old == 0 && val == 0) { // if the key was not pressed and now is
           keyState[keyNum] = DEBOUNCE;
           midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_ON);
-          break;
+          continue;
         }
         if (old == 1 && val == 1) { // if the key was pressed and now is not
           keyState[keyNum] = -DEBOUNCE;
           midi::send(KEY_CHANNEL, keyNum + KEY_BASE, KEY_OFF);
-          break;
+          continue;
         }
       }
       digitalWrite(keyLines[line], HIGH);
