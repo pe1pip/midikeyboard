@@ -18,11 +18,12 @@ If not, see <https://www.gnu.org/licenses/>
 #include <calcant.h>
 #include <midi.h>
 
-#define CALCANT 15
-#define CALCANT_LED 17
+#define CALCANT 9
+#define CALCANT_LED 8
 
 namespace calcant { 
   int8_t calcant;
+  int8_t calcant_debounce;
 
   /**
    * Sets up the calcant switch and its associated LED.
@@ -37,7 +38,7 @@ namespace calcant {
    * If the blower is off we blink the led to indicate that the organ is not making sound,
    * otherwise we keep it on to indicate that the organ is making sound.
    */
-  void blinkCalcant () {
+  void blinkLed () {
     if (calcant < 1) {
       if (millis() % 1000 < 500) {
         digitalWrite(CALCANT_LED, HIGH);
@@ -54,26 +55,30 @@ namespace calcant {
    */
   void scan () {
     // debounce timers
-    if (calcant > 1) {
-      calcant--;
+    if (calcant_debounce > 1) {
+      calcant_debounce--;
       return;
     }
-    if (calcant < 0) {
-      calcant++;
+    if (calcant_debounce < 0) {
+      calcant_debounce++;
       return;
     }
-    // calcant current state is now either 1 or 0, so we can read the state of calcant
-    // switch and compare it to the current state to see if it has changed
-    uint8_t val = digitalRead(CALCANT);
-    if (calcant == 0 && val > 0) {
-      calcant = DEBOUNCE; // if the blower was off and now is on, start debouncing
-      midi::send(STOP_CHANNEL, 0, KEY_ON);
-      return;
+    // on key-down (after debounce) toggle the state
+    uint8_t current = digitalRead(CALCANT);
+    if (current == 0 && calcant_debounce == 0) {
+      if (calcant == 0) {
+        calcant_debounce = DEBOUNCE;
+        calcant = 1;
+        midi::send(STOP_CHANNEL, 0, KEY_ON);
+      } else {
+        calcant_debounce = -DEBOUNCE;
+        calcant = 0;
+        midi::send(STOP_CHANNEL, 0, KEY_OFF);
+      }
     }
-    if (calcant == 1 && val == 0) {
-      calcant = -DEBOUNCE; // if the blower was on and now is off, start debouncing
-      midi::send(STOP_CHANNEL, 0, KEY_OFF);
-      return;
+    // key-up is just debounced, no action
+    if (current == 1 && calcant_debounce == 1) {
+      calcant_debounce = -DEBOUNCE;
     }
   }
 }

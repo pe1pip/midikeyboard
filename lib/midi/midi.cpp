@@ -44,12 +44,11 @@ namespace midi {
   void send (uint8_t channel, uint8_t keyNum, uint8_t midiCommand) {
     uint8_t command = midiCommand + channel;
     uint8_t velocity = 0x7F;
-    uint8_t key = keyNum + KEY_BASE;
     midiUART.write(command);
+    midiUART.write(keyNum);
     midiUART.write(velocity);
-    midiUART .write(key);
     #ifdef DEBUG
-    Serial.println("Sent MIDI message on channel " + String(channel) + " with command " + String(midiCommand, HEX) + " and key " + String(key, HEX));
+    Serial.println("Sent MIDI message on channel " + String(channel) + " with command " + String(midiCommand, HEX) + " and key " + String(keyNum, HEX));
     #endif
   }
 }

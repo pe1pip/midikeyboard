@@ -6,5 +6,7 @@
 namespace wifiMidi {
   void init();
   int send(uint8_t channel, uint8_t command, uint8_t keyNum);
+  void blinkLed();
+  void scan();
 }
 

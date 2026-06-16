@@ -2,6 +2,6 @@
 
 namespace calcant {
   void init();
-  void blinkCalcant();
+  void blinkLed();
   void scan();
 }
